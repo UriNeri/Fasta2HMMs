@@ -12,6 +12,7 @@ Fork LOG:
     D.Added word length = 2 to the CD-HIT call (might be important if CD-HIT will be used for more than collapsing sequences).
     E.Added -P option to enable the polyprotein filtering heuristic step (*Recommend trimming the seqs to the core beforehand, so Defulat == False)
     F.Added -M option to specify memory in Mb[default = 4800]
+    G.Enabled multi-threading when calling mcl.
     
 DESCRIPTION:
 This script takes as input a FASTA file containing protein
@@ -170,7 +171,7 @@ def main(args=None):
     else:
         blackList = ["nada"]
     # blastToMcl has its own verbosity to report status messages
-    mclResults = blastToMcl(blastResults,blackList,inflationNum=inflationNum)
+    mclResults = blastToMcl(blastResults,blackList,numCores,inflationNum=inflationNum)
     print "Splitting FASTA file based on MCL results..."
     fastaFiles = mclToFASTA(mclResults,collapsedFASTA,prefix=prefix)
     print "Filtering cluster FASTA files..."
@@ -360,7 +361,7 @@ def filterPolyproteins(blastFile):
 
     return blackList
 
-def blastToMcl(blastResults,blackList,inflationNum=None,prefix=None):
+def blastToMcl(blastResults,blackList,numCores,inflationNum=None,prefix=None):
     """
     This function takes in an -m 8 formatted BLAST results file, a
     blast list of sequences to be ignored, and an inflation number.
@@ -396,7 +397,7 @@ def blastToMcl(blastResults,blackList,inflationNum=None,prefix=None):
     else:
         inflationArgs = '-I %s ' % inflationNum
     print "Running mcl on generate matrix files..."
-    mclCmd = "mcl %s -use-tab %s %s -o %s" % (mciFilename,tabFilename,inflationArgs,mclFilename)
+    mclCmd = "mcl %s -use-tab %s %s -o %s -t %s" % (mciFilename,tabFilename,inflationArgs,mclFilename,numCores)
     returnVal = call(mclCmd.split())
     return mclFilename
 

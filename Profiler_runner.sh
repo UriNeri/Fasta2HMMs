@@ -24,10 +24,9 @@
 pyscriptfile="/path/to/profileHMMsFromFASTA_Nerid.py"
 
 THREADS=11
-input_dir="/path/to/input/dir/"
-input_fasta=$input_dir"/linear_uniq_Seqs4profiles_trimmed.faa"
+input_dir="/path/to/input/dir/"input_fasta=$input_dir"/uniq_Seqs4profiles_trimmed.faa"
 
-Attempt_ID=4
+Attempt_ID=9
 
 output_dir="/path/to/output/dir/Attempt_""$Attempt_ID"
 mkdir $output_dir
@@ -35,16 +34,16 @@ cd $output_dir
 
 cp $input_fasta $output_dir"/input_fasta.faa"
 # pre-Profiling info
-x=1.1 # Expansion parameter 
-min_ali_len=80 # From the original match.
+params=(0.0001 20 0.5 320) # [<E-value,score1,min_alignment_coverage,qlen>]
+x=1.053 # Expansion parameter 
 
 # Iter profiling params
-min_cola_id=0.99
-min_cola_cov=1
+min_cola_id=0.97
+min_cola_cov=0.90
 # min_id=1 
 # min_cov=0
-Memory=10000
-MCL_inflation=5
+Memory=6000
+MCL_inflation=3.5
 
 # Iter profiling Booleans
 coverage_heuristics="False"
@@ -52,6 +51,7 @@ polyproteins="False"
 Max_sensitivity="True" 
 
 pyscriptCMD="$($pyscriptfile -f input_fasta.faa -p $min_cola_id -c $min_cola_cov -C $coverage_heuristics -I $MCL_inflation -a $THREADS -M $Memory -o cluster -P $polyproteins -S $Max_sensitivity)"
+# pyscriptCMD="$($pyscriptfile -f input_fasta.faa -p $min_cola_id  -C $coverage_heuristics -I $MCL_inflation -a $THREADS -M $Memory -o cluster -P $polyproteins -S $Max_sensitivity)"
 
 # echo $pyscriptCMD
 cd msaFiles
@@ -62,6 +62,7 @@ cat temp > $i
 done
 rm temp
 cd ..
+
 mv cluster.hmm Attempt_"$Attempt_ID"_profiles.hmm
 hmmstat Attempt_"$Attempt_ID"_profiles.hmm > Attempt_"$Attempt_ID"_profiles_hmmstat.tsv
 Nclusters=$(grep "NAME" Attempt_"$Attempt_ID"_profiles.hmm -c)
@@ -75,6 +76,6 @@ min_collapsing_cov = $min_cola_cov \n
 MCL_inflation = $MCL_inflation \n
 Num_clusters = $Nclusters \n
 Original_x = $x \n
-Original_min_ali_len = $min_ali_len
-###pyscriptCMD = ###$pyscriptCMD
+Original_params $(echo $params) [<E-value,score1,min_alignment_coverage,qlen>] \n 
 " > Attempt_"$Attempt_ID"_params.env
+echo "Done: Attempt_" "$Attempt_ID"
