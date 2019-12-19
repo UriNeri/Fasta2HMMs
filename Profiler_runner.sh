@@ -76,5 +76,5 @@ MCL_inflation = $MCL_inflation \n
 Num_clusters = $Nclusters \n
 Original_x = $x \n
 Original_min_ali_len = $min_ali_len
-pyscriptCMD = $pyscriptCMd
+###pyscriptCMD = ###$pyscriptCMD
 " > Attempt_"$Attempt_ID"_params.env
