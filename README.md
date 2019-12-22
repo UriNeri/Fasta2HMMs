@@ -12,4 +12,5 @@ Fork LOG: <br/>
     D.Added word length = 2 to the CD-HIT call <br/>
     E.Added -P option to enable the polyprotein filtering heuristic step (*Not recommend if you trim the seqs prior) <br/> 
     F.Added -M option to specify memory in Mb[default = 4800] <br/>
+    G.Enabled multi-threading when calling mcl. <br/>
     
