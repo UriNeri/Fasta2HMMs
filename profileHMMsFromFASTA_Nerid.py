@@ -277,12 +277,12 @@ def collapseSequence(fastaFile,Memory,fractionID,numCores,fractionCov=None):
         coverageArgs = ''
         coverageTitle = ''
     else:
-        coverageArgs = " -c %s " % fractionCov
-        coverageTitle = "_c%s" % (str(int(100*fractionCov)))
+        coverageArgs = " -s %s " % fractionCov
+        coverageTitle = "_s%s" % (str(int(100*fractionCov)))
     outputParts = os.path.splitext(fastaFile)
-    identityTitle = "_s%s" % (str(int(100*fractionID)))
+    identityTitle = "_c%s" % (str(int(100*fractionID)))
     outputFile = outputParts[0] + identityTitle + coverageTitle + outputParts[1]
-    cdhitCmd = "cd-hit -n 3 -M %s -T %s  -i %s -o %s %s -s %s " % (Memory,numCores,fastaFile,outputFile,coverageArgs,fractionID)
+    cdhitCmd = "cd-hit -n 3 -M %s -T %s  -i %s -o %s %s -c %s " % (Memory,numCores,fastaFile,outputFile,coverageArgs,fractionID)
     returnVal = call(cdhitCmd.split())
     return outputFile
 
