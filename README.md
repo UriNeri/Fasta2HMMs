@@ -1,11 +1,10 @@
 # Fasta2ProfileDBs 
 Input is single fasta file with amino acid sequences. 
-Sequences perclsutered (CD-HIT) --> "ALL vs ALL" (DIAMOND BLASTp) --> clustered (MCL) --> aligned MUSCLE --> Formatted as DBs.
+Sequences perclsutered (CD-HIT) --> "ALL vs ALL" (DIAMOND BLASTp) --> clustered (MCL) --> aligned (MUSCLE) --> Formatted as DBs.
 Output directory should contain HMMdb (HMMER), HHMs (hh-suite) and MMseqs profile db.
 *.env file specifics the given positinal argument used, which are:
 
    Positional arguments:
-   #	Desc (suggestion)	
    1	Threads
    2	Memory in Mb
    3	output directory
