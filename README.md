@@ -2,7 +2,7 @@
 Input is single fasta file with amino acid sequences. 
 Sequences perclsutered (CD-HIT) --> "ALL vs ALL" (DIAMOND BLASTp) --> clustered (MCL) --> aligned (MUSCLE) --> Formatted as DBs.
 Output directory should contain HMMdb (HMMER), HHMs (hh-suite) and MMseqs profile db.
-*.env file specifics the given positinal argument used, which are:
+*.env file specifics the given positional argument used, which are:
 
    Positional arguments:
 1. Threads
