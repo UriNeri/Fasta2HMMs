@@ -11,7 +11,7 @@ if [[ $# -eq 0 ]] ; then
    4  Input fasta file (expected *.faa)
    5  Search params used  [<E-value,score,min_alignment_coverage,qlen>] 
    6  Minimal id for preclustering sequence collapsing (0.9) 
-   7  Minimal coverage for preclustering (0.75) (-AS in cd-hit, aligment coverage of the smaller seq)
+   7  Minimal coverage for preclustering (0.75) (-aS in cd-hit, aligment coverage of the smaller seq)
    8  MCL inflation (3.6)
    9  Minimal number of sequences per cluster (>=2) (Do not change for now).
    10 Precluster (True)
@@ -41,7 +41,7 @@ mkdir msaFiles singletons fastaFiles HHMfiles logs HMMfiles MMseqs2_profiles Clu
 if [ "$Precluster" == "True" ]; 
 then
   mkdir preclusters
-  cd-hit -n 3 -M $Memory -T $THREADS  -i $input_fasta -o preclusters/"$ini_name"_c"$min_prec_id" -AS $min_prec_cov -c $min_prec_id 
+  cd-hit -n 3 -M $Memory -T $THREADS  -i $input_fasta -o preclusters/"$ini_name"_c"$min_prec_id" -aS $min_prec_cov -c $min_prec_id 
   input_fasta="$output_dir"/preclusters/"$ini_name"_c"$min_prec_id" 
 fi
 
@@ -59,8 +59,8 @@ mcxload -abc "$ini_name"_allByAll_blastp.abc --stream-mirror --stream-neg-log10 
 mcl "$ini_name"_allByAll_blastp.mci -use-tab "$ini_name"_allByAll_blastp.tab -I $MCL_inflation -o "$ini_name"_allByAll_blastp.mcl -t $THREADS 
 
 if [ $(which seqkit 2>/dev/null) ]; then
+  i=0
   echo "seqkit found, using that"
-i=0
 while IFS="" read -r p || [ -n "$p" ]
 do
    i=$((i+1))
@@ -68,16 +68,16 @@ do
   cls_mems1=$(sed  's/ /'',''/g' <<< $(echo $cls_mems))
   seqkit grep $input_fasta -p "$cls_mems1" -w 0 > "$Cls_Prefix"."$i".faa
 done < "$ini_name"_allByAll_blastp.mcl
-else
+else 
+  i=0
 echo "seqkit not found, using awk"
-i=0
 while IFS="" read -r p || [ -n "$p" ]
 do
    i=$((i+1))
   cls_mems=$(printf '%s' "$p")
   sed  's/ /''\n>''/g' <<< $(echo $cls_mems) >cls_mems1
   awk 'BEGIN{RS=">";FS="\n"}NR==FNR{a[$1]++}NR>FNR{if ($1 in a && $0!="") printf ">%s",$0}' cls_mems1 $input_fasta > "$Cls_Prefix"."$i".faa
-done < "$informati_name"_allByAll_blastp.mcl
+done < "$ini_name"_allByAll_blastp.mcl
 rm cls_mems1
 fi
 
@@ -95,7 +95,7 @@ mv ../NotEnoughSeqs/$clssn
 rm nseqtbl
 fi
 
-parallel -j"$THREADS" muscle -in {} -out {.}.msa.faa -log {.}.faa.log -quiet  ::: ./*.faa
+parallel -j"$THREADS" muscle -in {} -out {.}.msa.faa -log {.}.faa.log -quiet -maxmb $Memory ::: ./*.faa
 mv ./*.log ../logs
 mv ./*.msa.faa ../msaFiles/ 
 
@@ -105,7 +105,7 @@ do
 file_with_suffix=$(basename $i) 
 file_name=$(basename $file_with_suffix ".msa.faa")
 hmmbuild --informat afa -n $file_name -o logs/"$file_name".hmm.log HMMfiles/"$file_name".hmm  $i
-hhmake -v 2 -name $file_name -i $i -o ./HHMfiles/"$file_name".hhm
+hhmake -v 2 -name $file_name -i $i -o ./HHMfiles/"$file_name".hhm -v 0
 done 
 ffindex_build "$Cls_Prefix"_p.hhm "$Cls_Prefix"_p.hhm.index ./HHMfiles/*.hhm
 mmseqs convertprofiledb "$Cls_Prefix"_p.hhm ./MMseqs2_profiles/"$Cls_Prefix"_MM
