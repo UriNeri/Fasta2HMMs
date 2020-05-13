@@ -86,7 +86,7 @@ mv $singlist ../singletons/
 cat ../singletons/* > ../singletons.faa
 
 ### filter faa's with #nseq<min_nseq ###
-if (( $min_nseq >= 2)); # 
+if (( $min_nseq > 2)); # 
 then
 grep ">" -F ./*.faa -c |  sed  's/':'/\t/g' > nseqtbl
 echo "$(echo $(awk  -v nseq=$min_nseq '$2 < nseq || NR==1' nseqtbl ))"  | sed  's/ .[0-9]* / /g' > Nseqtbl
