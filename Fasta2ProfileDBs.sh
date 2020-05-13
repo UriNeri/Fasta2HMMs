@@ -30,9 +30,9 @@ min_prec_id=$6 #0.90
 min_prec_cov=$7 #0.75
 MCL_inflation=$8 # 3.6
 min_nseq=$9 # 2
-Precluster=$10 # True
-Max_sensitivity=$11 # True
-Cls_Prefix=$12 # set_ID
+Precluster="${10}" # True
+Max_sensitivity="${11}" # True
+Cls_Prefix="${12}" # set_ID
 
 ini_name=$(basename $input_fasta ".faa")
 mkdir $output_dir
@@ -124,8 +124,9 @@ cd ../
 Nsingletons=$(grep ">" singletons.faa -c)
 Nprofiles=$(grep "NAME" "$Cls_Prefix"_p.hmm -c)
 echo "Enviroment_parameters: 
-Output clusters prefix = $12 
+Output clusters prefix = $Cls_Prefix 
 Diamond_more_sensitivity = $Max_sensitivity 
+Precluster = $Precluster
 Preclustering id >= $min_prec_id 
 Preclustering coverage >= $min_prec_cov 
 MCL_inflation = $MCL_inflation 

@@ -12,4 +12,4 @@ Precluster=True
 Max_sensitivity=True
 Cls_Prefix=set0 # set_ID
 
-bash $Profiler_script $THREADS $Memory $output_dir $input_fasta $params $min_prec_id $min_prec_cov $MCL_inflation $Precluster $Max_sensitivity $Cls_Prefix
+bash $Profiler_script $THREADS $Memory $output_dir $input_fasta $params $min_prec_id $min_prec_cov $MCL_inflation $min_nseq $Precluster $Max_sensitivity $Cls_Prefix
