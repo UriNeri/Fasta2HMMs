@@ -1,4 +1,4 @@
-Profiler_motif="/path/to/Profiler_motifs.sh"
+Profiler_motif="/path/to/Fasta2ProfileDBs.sh"
 THREADS=11
 Memory=4800
 output_dir="/path/to/output/directory/"
