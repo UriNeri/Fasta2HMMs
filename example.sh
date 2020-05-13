@@ -1,4 +1,4 @@
-Profiler_motif="/path/to/Fasta2ProfileDBs.sh"
+Profiler_script="/path/to/Fasta2ProfileDBs.sh"
 THREADS=11
 Memory=4800
 output_dir="/path/to/output/directory/"
@@ -12,4 +12,4 @@ Precluster=True
 Max_sensitivity=True
 Cls_Prefix=set0 # set_ID
 
-bash $Profiler_motif $THREADS $Memory $output_dir $input_fasta $params $min_prec_id $min_prec_cov $MCL_inflation $Precluster $Max_sensitivity $Cls_Prefix
+bash $Profiler_script $THREADS $Memory $output_dir $input_fasta $params $min_prec_id $min_prec_cov $MCL_inflation $Precluster $Max_sensitivity $Cls_Prefix
